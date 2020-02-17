@@ -1,12 +1,12 @@
 node('docker-slave-general') { 
-  def DockerImage = "webserver:v1.0"
+  def DockerImage = "<username>/webserver:1.0.0"
   
   stage('Pre') { // Run pre-build steps
     cleanWs()
     sh "docker rm -f webserver || true"
   }
   
-  stage('Git') { // Get code from GitLab repository
+  stage('Git') { // Get code from Git repository
     git branch: 'master',
       url: 'https://github.com/MadDamDam/flask-http.git'
   }
@@ -33,5 +33,11 @@ node('docker-slave-general') {
         sh "echo Webserver returned ${dockerOutput}"
     }
     return
+  }
+
+  stage('push') { // Push image to dockerhub
+    withDockerRegistry([ credentialsId: "<credentials_ID>", url: "" ]) {
+          sh "docker push ${DockerImage}"
+        }
   }
 }
