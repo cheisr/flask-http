@@ -1,0 +1,30 @@
+version: "3.4"
+x-logging:
+  &default-logging
+  options:
+    max-size: '10m'
+    max-file: '5'
+  driver: json-file
+
+services:
+  server:
+    build: .
+    image: flask-http:${FLASK_TAG}
+    ports:
+      - "5001:5001"
+    tty: false
+    logging: *default-logging
+    restart: unless-stopped
+  nginx:
+    image: nginx:${NGINX_TAG}
+    command: nginx -g "daemon off;" -c /config/nginx.conf
+    ports:
+      - "443:443"
+    volumes:
+      - /data/certificates:/config/ssl
+      - ./nginx/config:/config
+    logging: *default-logging
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - server
