@@ -1,7 +1,5 @@
 # flask-http webserver
-Test webserver for opsschool jenkins/Monitoring class.  
-With added Jenkinsfile, prometheus instrumentation and TLS reverse proxy.  
-Thanks Tsahi!
+added Jenkinsfile, prometheus instrumentation and TLS reverse proxy.  
 
 Generating self-signed TLS certificates:  
 ```
